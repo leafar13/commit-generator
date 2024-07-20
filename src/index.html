@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Commits Perfectos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        form {
+            display: grid;
+            gap: 20px;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 30px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 4px;
+            white-space: pre-wrap;
+        }
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .hint {
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Generador de Commits Perfectos</h1>
+        <form id="commitForm">
+            <div>
+                <label for="commitType">Tipo de Commit:</label>
+                <select id="commitType" required>
+                    <option value="">Selecciona un tipo</option>
+                    <option value="feat">feat: Nueva característica</option>
+                    <option value="fix">fix: Corrección de error</option>
+                    <option value="docs">docs: Cambios en documentación</option>
+                    <option value="style">style: Cambios de formato</option>
+                    <option value="refactor">refactor: Refactorización de código</option>
+                    <option value="test">test: Añadir o modificar pruebas</option>
+                    <option value="chore">chore: Tareas de mantenimiento</option>
+                </select>
+            </div>
+            <div>
+                <label for="commitTitle">Título del Commit:</label>
+                <input type="text" id="commitTitle" maxlength="50" required>
+                <div class="hint">Usa el imperativo, máximo 50 caracteres</div>
+                <div id="titleError" class="error"></div>
+            </div>
+            <div>
+                <label for="commitBody">Cuerpo del Commit (opcional):</label>
+                <textarea id="commitBody"></textarea>
+                <div class="hint">Explica el "qué" y el "por qué" del cambio</div>
+            </div>
+            <div>
+                <label for="breakingChanges">Cambios importantes (opcional):</label>
+                <textarea id="breakingChanges"></textarea>
+                <div class="hint">Describe cualquier cambio que rompa la compatibilidad</div>
+            </div>
+            <div>
+                <label for="issueNumbers">Números de Issue (opcional):</label>
+                <input type="text" id="issueNumbers">
+                <div class="hint">Ej: #123, #456</div>
+            </div>
+            <button type="submit">Generar Commit</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        document.getElementById('commitForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            generateCommit();
+        });
+
+        function generateCommit() {
+            const type = document.getElementById('commitType').value;
+            const title = document.getElementById('commitTitle').value.trim();
+            const body = document.getElementById('commitBody').value.trim();
+            const breakingChanges = document.getElementById('breakingChanges').value.trim();
+            const issueNumbers = document.getElementById('issueNumbers').value.trim();
+
+            if (!type || !title) {
+                alert('Por favor, completa el tipo de commit y el título.');
+                return;
+            }
+
+            let commitMessage = `${type}: ${title}\n\n`;
+
+            if (body) {
+                commitMessage += `${body}\n\n`;
+            }
+
+            if (breakingChanges) {
+                commitMessage += `BREAKING CHANGE: ${breakingChanges}\n\n`;
+            }
+
+            if (issueNumbers) {
+                commitMessage += `Closes ${issueNumbers}`;
+            }
+
+            document.getElementById('result').textContent = commitMessage.trim();
+            document.getElementById('result').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
